@@ -1,0 +1,963 @@
+{
+  "contractName": "ArtworkRegistry",
+  "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "chainId": 31337,
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "abi": [
+    {
+      "type": "constructor",
+      "stateMutability": "undefined",
+      "payable": false,
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ArtworkAlreadyRevoked",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "DuplicateHash",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ERC721IncorrectOwner",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "sender"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "address",
+          "name": "owner"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721InsufficientApproval",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "operator"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721InvalidApprover",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "approver"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721InvalidOperator",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "operator"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721InvalidOwner",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721InvalidReceiver",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "receiver"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721InvalidSender",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "sender"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ERC721NonexistentToken",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableInvalidOwner",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableUnauthorizedAccount",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "account"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ReentrancyGuardReentrantCall",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroAddress",
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Approval",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "approved",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ApprovalForAll",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "operator",
+          "indexed": true
+        },
+        {
+          "type": "bool",
+          "name": "approved",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ArtworkFlagged",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "by",
+          "indexed": true
+        },
+        {
+          "type": "string",
+          "name": "reason",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ArtworkRegistered",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "artist",
+          "indexed": true
+        },
+        {
+          "type": "string",
+          "name": "title",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "ipfsCid",
+          "indexed": false
+        },
+        {
+          "type": "string",
+          "name": "contentHash",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ArtworkRevoked",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "by",
+          "indexed": true
+        },
+        {
+          "type": "string",
+          "name": "reason",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "previousOwner",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "newOwner",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "ProvenanceRecorded",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "actor",
+          "indexed": true
+        },
+        {
+          "type": "string",
+          "name": "action",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "Transfer",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "from",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "to",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "approve",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "to"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "balanceOf",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "findByContentHash",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "contentHash"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "bool",
+          "name": "found"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "flagArtwork",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "string",
+          "name": "reason"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getApproved",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getArtwork",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "tuple",
+          "name": "",
+          "components": [
+            {
+              "type": "uint256",
+              "name": "tokenId"
+            },
+            {
+              "type": "address",
+              "name": "artist"
+            },
+            {
+              "type": "string",
+              "name": "title"
+            },
+            {
+              "type": "string",
+              "name": "description"
+            },
+            {
+              "type": "string",
+              "name": "contentHash"
+            },
+            {
+              "type": "string",
+              "name": "ipfsCid"
+            },
+            {
+              "type": "string",
+              "name": "medium"
+            },
+            {
+              "type": "uint256",
+              "name": "editionSize"
+            },
+            {
+              "type": "uint256",
+              "name": "registeredAt"
+            },
+            {
+              "type": "uint256",
+              "name": "authenticity"
+            },
+            {
+              "type": "bool",
+              "name": "revoked"
+            },
+            {
+              "type": "address",
+              "name": "flaggedBy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getProvenance",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "tuple[]",
+          "name": "",
+          "components": [
+            {
+              "type": "address",
+              "name": "actor"
+            },
+            {
+              "type": "uint256",
+              "name": "timestamp"
+            },
+            {
+              "type": "string",
+              "name": "action"
+            },
+            {
+              "type": "string",
+              "name": "note"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "hashRegistered",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "bytes32",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "hashToToken",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "bytes32",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isApprovedForAll",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner"
+        },
+        {
+          "type": "address",
+          "name": "operator"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "name",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "ownerOf",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "purchaseArtwork",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "to"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "registerArtwork",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "tuple",
+          "name": "input",
+          "components": [
+            {
+              "type": "string",
+              "name": "title"
+            },
+            {
+              "type": "string",
+              "name": "description"
+            },
+            {
+              "type": "string",
+              "name": "contentHash"
+            },
+            {
+              "type": "string",
+              "name": "ipfsCid"
+            },
+            {
+              "type": "string",
+              "name": "medium"
+            },
+            {
+              "type": "uint256",
+              "name": "editionSize"
+            },
+            {
+              "type": "uint256",
+              "name": "authenticity"
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "revokeArtwork",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "string",
+          "name": "reason"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "safeTransferFrom",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "from"
+        },
+        {
+          "type": "address",
+          "name": "to"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "safeTransferFrom",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "from"
+        },
+        {
+          "type": "address",
+          "name": "to"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "bytes",
+          "name": "data"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setApprovalForAll",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "operator"
+        },
+        {
+          "type": "bool",
+          "name": "approved"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setAuthenticity",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "uint256",
+          "name": "score"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "supportsInterface",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "bytes4",
+          "name": "interfaceId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "symbol",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "tokenURI",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "string",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "totalArtworks",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "transferArtwork",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "to"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        },
+        {
+          "type": "string",
+          "name": "note"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "transferFrom",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "from"
+        },
+        {
+          "type": "address",
+          "name": "to"
+        },
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "newOwner"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "verifyArtwork",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokenId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "exists"
+        },
+        {
+          "type": "bool",
+          "name": "valid"
+        },
+        {
+          "type": "address",
+          "name": "owner_"
+        },
+        {
+          "type": "string",
+          "name": "contentHash"
+        },
+        {
+          "type": "string",
+          "name": "ipfsCid"
+        }
+      ]
+    }
+  ]
+}

@@ -1,26 +1,270 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   KalaSecure design tokens
+
+   A printed exhibition catalogue, read on paper.
+
+   The old build was a lit gallery after closing time: dark plaster, brass
+   fittings, grain and bloom. This is the same content with the volume turned
+   down. Warm near-white paper, ink-black type, hairline rules, one amber
+   accent, and nothing that glows.
+
+   Minimal here means fewer marks doing more work, not an empty page. Structure
+   comes from typography, rules and whitespace. Depth comes from a single soft
+   shadow, reserved almost entirely for the artwork, which is the one thing on
+   the page that is genuinely a physical object.
+
+   Colour survives, but demoted. Each artwork still derives an accent from its
+   own stored colour signature (see lib/palette.ts); it is used as a rule, a
+   mark or a large numeral rather than as a wash of light behind the page.
+   ========================================================================== */
+
+@theme {
+  /* --- surfaces: warm paper, so white never reads as cold --- */
+  --color-canvas: oklch(98.4% 0.004 84);
+  --color-surface: oklch(100% 0 0);
+  --color-surface-2: oklch(97.2% 0.005 84);
+  --color-surface-3: oklch(93.6% 0.006 82);
+
+  /* --- ink: warm near-black, never #000 --- */
+  --color-ink: oklch(22% 0.012 60);
+  --color-ink-muted: oklch(45% 0.012 65);
+  --color-ink-faint: oklch(51% 0.012 68);
+
+  /* --- one accent: deep amber, readable on paper at 4.9:1 --- */
+  --color-brass: oklch(52% 0.115 66);
+  --color-brass-soft: oklch(66% 0.1 70);
+  --color-brass-dim: oklch(56% 0.09 72);
+  --color-brass-tint: oklch(95% 0.03 82);
+
+  /* Status colours: deepened for the same reason ink was deepened. */
+  --color-terracotta: oklch(52% 0.13 40);
+  --color-sage: oklch(46% 0.08 155);
+  --color-crimson: oklch(48% 0.17 27);
+
+  --color-line: oklch(87% 0.008 78);
+  --color-line-soft: oklch(92.5% 0.006 80);
+
+  /* Label stock: still not the same white as the page, because a printed label
+     is a different material from a screen. */
+  --color-paper: oklch(99% 0.002 84);
+  --color-paper-ink: oklch(24% 0.02 70);
+
+  /* --- fonts --- */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", monospace;
+
+  /* --- radii: tight, almost square. Curves are decoration here. --- */
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.3125rem;
+  --radius-lg: 0.4375rem;
+  --radius-xl: 0.625rem;
+  --radius-2xl: 1rem;
+
+  /* --- elevation. Three steps, all quiet. Almost nothing uses them. --- */
+  --shadow-raised: 0 1px 2px oklch(22% 0.012 60 / 0.05);
+  --shadow-plate: 0 1px 2px oklch(22% 0.012 60 / 0.06), 0 4px 12px -6px oklch(22% 0.012 60 / 0.1);
+  --shadow-hung: 0 1px 2px oklch(22% 0.012 60 / 0.08), 0 12px 28px -14px oklch(22% 0.012 60 / 0.18);
+
+  /* --- motion: brief and few. Nothing loops. --- */
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-settle: settle 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-shimmer: shimmer 2.2s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+/* The plate being hung. A short settle, no overshoot. */
+@keyframes settle {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ========================================================================== */
+
+@layer base {
+  * { border-color: var(--color-line); }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 0, "WONK" 0;
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection { background: var(--color-brass-tint); color: var(--color-ink); }
+
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--color-canvas); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-3);
+    border-radius: 99px;
+    border: 3px solid var(--color-canvas);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-line); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* ---- Catalogue label: small caps, wide tracking. The workhorse of the
+         whole layout, because it marks every section without a box. -------- */
+  .catalogue {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* ---- A hairline. Used constantly instead of shadows or fills. ---------- */
+  .rule-gold {
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  .shimmer {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-surface-2) 0%,
+      var(--color-surface-3) 50%,
+      var(--color-surface-2) 100%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+}
+
+@utility text-balance { text-wrap: balance; }
+
+/* ==========================================================================
+   The plate. In a minimal build the artwork is the only thing allowed a
+   shadow, because it is the only thing here that is a physical object. The
+   frame is a single hairline; no mat, no bloom, no inset rings.
+   ========================================================================== */
+@layer components {
+  .plate {
+    position: relative;
+    background: var(--color-surface-3);
+    box-shadow: var(--shadow-hung);
+    isolation: isolate;
+  }
+  .plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px oklch(22% 0.012 60 / 0.1);
+  }
+}
+
+/* ==========================================================================
+   Hand-drawn marks. The doodles are inline SVG scaled to fit whatever they
+   annotate, so a circle drawn around a word follows the word as the type
+   reflows. Both wrappers are inline-block with a normal text flow, and the
+   mark is an absolutely positioned overlay: annotating must never change
+   layout, and `overflow` is deliberately visible so the pen can overshoot.
+   ========================================================================== */
+@layer components {
+  .doodle-circle {
+    position: relative;
+    display: inline-block;
+    padding-inline: 0.12em;
+  }
+  .doodle-circle__mark {
+    position: absolute;
+    inset: -0.16em -0.14em;
+    width: calc(100% + 0.28em);
+    height: calc(100% + 0.32em);
+    overflow: visible;
+    pointer-events: none;
+    color: currentColor;
+    /* Light enough to read as a pencil annotation, dark enough that the
+       weakest artwork accent still clears 3:1 on paper (measured: 3.11:1
+       for the olive #627a29, the only one that was close). */
+    opacity: 0.78;
+  }
+
+  .doodle-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .doodle-underline__mark {
+    position: absolute;
+    left: -0.08em;
+    right: -0.08em;
+    bottom: -0.12em;
+    width: calc(100% + 0.16em);
+    height: 0.34em;
+    min-height: 6px;
+    overflow: visible;
+    pointer-events: none;
+    color: currentColor;
+    opacity: 0.78;
+  }
+
+  /* Standalone marks placed in a margin or a corner. */
+  .doodle-mark {
+    position: absolute;
+    pointer-events: none;
+    overflow: visible;
+    color: var(--color-brass);
+    opacity: 0.78;
+  }
+
+  /* A pass mark on a passing audit row. Replaces the tidy tick, which reads
+     as machine output next to a hand-drawn report. */
+  .doodle-tick {
+    color: var(--color-sage);
+  }
+  .doodle-cross {
+    color: var(--color-crimson);
+  }
+}
+
+/* Reduced motion does not mean reduced contrast. The mark stays legible; it
+   simply does not travel, because nothing here animates position anyway. */
+@media (prefers-reduced-motion: reduce) {
+  .doodle-mark,
+  .doodle-circle__mark,
+  .doodle-underline__mark {
+    opacity: 0.78;
+  }
 }
