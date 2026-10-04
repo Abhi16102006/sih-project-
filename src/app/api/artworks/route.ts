@@ -129,8 +129,17 @@ export async function POST(req: Request) {
       // The contract returns (tokenId, found) in that order.
       const [existingToken, found] = await contract.findByContentHash(contentHash);
       if (found) {
+        // Byte-identical file. The contract would revert anyway; catch it here so
+        // the message names the token.
         chainStatus = "rejected-copy";
         chainError = `This exact file is already registered as token #${existingToken}`;
+      } else if (scan.verdict === "duplicate") {
+        // A different file that is perceptually the same painting. The contract
+        // cannot see this (the hash differs), so the gate has to live here.
+        // Minting it would hand a forger a valid token, which is the exact thing
+        // the project exists to prevent.
+        chainStatus = "rejected-copy";
+        chainError = `Too similar to "${scan.best?.title ?? "an existing work"}" (${scan.similarity}% match). Refused rather than minted.`;
       } else {
         const input = {
           title: parsed.data.title,
