@@ -141,11 +141,11 @@ const ARTISTS = [
     bio: "Contemporary painter working in acrylic and charcoal. Interested in coastal memory and the way light moves through a room nobody lives in any more.",
     wallet: "0x9f2c4a7b1e8d3056c4b7a2f9e1d8c3b5a7f9e2d4",
     works: [
-      { title: "Monsoon Over the Konkan", medium: "Acrylic on canvas", dims: "90 x 70 cm", price: 1.4, year: 2025,
+      { title: "Monsoon Over the Konkan", img: "monsoon.jpg", medium: "Acrylic on canvas", dims: "90 x 70 cm", price: 1.4, year: 2025,
         desc: "Painted across three monsoons. The drips are not a technique — they are a record of the window being open." },
-      { title: "Salt and Cedar", medium: "Charcoal on paper", dims: "56 x 42 cm", price: 0.6, year: 2024,
+      { title: "Salt and Cedar", img: "salt.jpg", medium: "Charcoal on paper", dims: "56 x 42 cm", price: 0.6, year: 2024,
         desc: "A study of the old port warehouses before the restoration." },
-      { title: "Untitled (Blue Room)", medium: "Acrylic on canvas", dims: "60 x 60 cm", price: 0.95, year: 2026,
+      { title: "Untitled (Blue Room)", img: "konkan.jpg", medium: "Acrylic on canvas", dims: "60 x 60 cm", price: 0.95, year: 2026,
         desc: "The only painting I made without looking at a photograph." },
     ],
   },
@@ -154,9 +154,9 @@ const ARTISTS = [
     bio: "Mixed-media artist and printmaker. My work deals with the administrative paperwork of memory — ration cards, leases, and the forms they leave behind.",
     wallet: "0x3b81e5c2d9a70f46b2c8e5d1a9f4b7c0e2d5a8f3",
     works: [
-      { title: "Form 12, Twice Signed", medium: "Screenprint and ink", dims: "76 x 56 cm", price: 0.8, year: 2025,
+      { title: "Form 12, Twice Signed", img: "blueform.jpg", medium: "Screenprint and ink", dims: "76 x 56 cm", price: 0.8, year: 2025,
         desc: "Two ownership documents from the same family, layered until the signatures merge." },
-      { title: "Ledger of Small Repairs", medium: "Ink on paper", dims: "42 x 30 cm", price: 0.35, year: 2026,
+      { title: "Ledger of Small Repairs", img: "ledger.jpg", medium: "Ink on paper", dims: "42 x 30 cm", price: 0.35, year: 2026,
         desc: "Every line is a real repair logged by my grandmother's household." },
     ],
   },
@@ -165,9 +165,9 @@ const ARTISTS = [
     bio: "Watercolourist and teacher. I paint the backwaters at the hour when the light goes gold and nobody is speaking.",
     wallet: "0x7c4a2f9d6b3e8157c0a4d2f8b6e3c9a5d1f7b0e2",
     works: [
-      { title: "Backwater, Golden Hour", medium: "Watercolour on cotton", dims: "54 x 40 cm", price: 1.1, year: 2025,
+      { title: "Backwater, Golden Hour", img: "backwater.jpg", medium: "Watercolour on cotton", dims: "54 x 40 cm", price: 1.1, year: 2025,
         desc: "Six hours of work in ninety minutes of light. Most of it is luck." },
-      { title: "The Houseboat at Low Tide", medium: "Watercolour on cotton", dims: "48 x 36 cm", price: 0.75, year: 2026,
+      { title: "The Houseboat at Low Tide", img: "houseboat.jpg", medium: "Watercolour on cotton", dims: "48 x 36 cm", price: 0.75, year: 2026,
         desc: "When the water drops, the boat stops floating and starts being a building." },
     ],
   },
@@ -218,11 +218,10 @@ async function main() {
     const uid = Number(info.lastInsertRowid);
 
     for (const w of a.works) {
-      const png = await sharp(
-        Buffer.from(
-          artSvg(1200, 900, (a.name.length * 31 + w.title.length * 17) % 9973, RUN_SALT),
-        ),
-      )
+      const seedPath = path.join(__dirname, "seed-images", w.img || "monsoon.jpg");
+      const raw = fs.readFileSync(seedPath);
+      const png = await sharp(raw)
+        .resize(1200, 900, { fit: "inside", withoutEnlargement: true })
         .png({ compressionLevel: 9 })
         .toBuffer();
 
